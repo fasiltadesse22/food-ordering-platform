@@ -1,0 +1,17 @@
+C2.1.6 verification contract
+
+Expected suites invoked by scripts/verify.sh:
+- OrderIntentTest
+- OrderingWorkflowCatalogTest
+- OrderingSemanticsTest
+- AuthoritativeOrderStateTest
+- OrderLifecycleTest
+- ExecutableCorrectnessModelTest
+
+Repository/API publishing environment did not execute a Java runtime for this commit. Therefore this file does not claim observed PASS output. The executable suite and verification command are committed so the result can be reproduced with Java 21.
+
+Evidence classification:
+- Observed: source/tree creation and Git commit creation succeeded.
+- Inferred: the new model is source-compatible with the inspected C2.1.5 lifecycle API.
+- Assumed until runtime execution: javac/test suite passes in a Java 21 environment.
+- Guaranteed: none beyond the explicitly modeled sequential contracts under their stated preconditions.
