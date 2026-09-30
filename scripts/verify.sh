@@ -16,4 +16,5 @@ java -ea -cp "$OUT" com.foodordering.correctness.ReversibilitySemanticsTest
 java -ea -cp "$OUT" com.foodordering.correctness.DuplicateIntentSemanticsTest
 java -ea -cp "$OUT" com.foodordering.correctness.ConflictingConcurrentOperationsTest
 java -ea -cp "$OUT" com.foodordering.correctness.StaleDecisionExperimentTest
+java -ea -cp "$OUT" com.foodordering.correctness.ConsistencyScopePressureTest
 echo "PASS compile main + test sources with Java 21"

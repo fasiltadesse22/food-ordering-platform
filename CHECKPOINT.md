@@ -1,28 +1,28 @@
-# C2.1.11 Checkpoint
+# C2.1.12 Checkpoint
 
-Part 1.1.11 is **Stale Decisions**.
+Part 1.1.12 is **Consistency Scope Pressure**.
 
 ## Predecessor
-C2.1.10 at `ec806d8277258fb0417da89ffc5cbe64beb6ed8a`.
+C2.1.11 at `976fdf1717be02861072ed2c12bb8fa655bd11ae`.
 
 ## Added
-- explicit distinction between a stale read and a stale business decision;
-- decision-validity reasoning across observation, delay, competing update and effect;
-- deterministic cancellation-versus-delayed-acceptance experiment;
-- evidence contrasting blind application of an old decision with reevaluation against current authoritative truth.
+- explicit derivation from invariant scope to consistency-boundary pressure;
+- distinction between local transition legality and a business invariant spanning multiple independently mutable facts;
+- deterministic order/payment experiment exposing a combined invariant that becomes false while order-only validation remains legal;
+- explicit boundary between Cluster 1.1 correctness discovery and Cluster 1.2 aggregate/local-transaction design.
 
 ## Architectural conclusion
-A decision is not made correct forever merely because it was correct when derived. Its justification depends on facts and preconditions. When correctness-relevant truth can change between observation and effect, the architecture needs a way to preserve, re-establish, or detect the invalidation of that relationship.
+Before choosing transactions, locks, aggregates, services, Saga, or messaging, identify every fact on which an invariant depends and the point at which those facts must agree. If correctness-relevant facts can change independently, the invariant creates coordination/consistency pressure. The appropriate boundary and mechanism remain design questions.
 
 ## Deliberately unresolved
-- which concurrency-control mechanism should be selected;
-- whether observation and effect require one atomic boundary;
-- optimistic versioning, compare-and-set, pessimistic locking and transaction isolation;
-- aggregate/repository and database transaction boundaries;
-- real multithreaded/database contention;
-- distributed stale-state and cross-service coordination;
-- durable idempotency/deduplication and restart recovery;
-- Kafka, Outbox, Inbox, Saga, Redis and distributed locks.
+- entity/value-object/aggregate design;
+- aggregate roots and aggregate size;
+- repositories and persistence;
+- local ACID transaction boundaries;
+- optimistic/pessimistic concurrency mechanisms;
+- cross-aggregate consistency strategy;
+- service decomposition and independent deployment;
+- distributed transactions, Saga, Kafka, Outbox, Redis, distributed locks, or eventual-consistency mechanisms.
 
 ## Verification boundary
-The new Java experiment is executable evidence. Runtime PASS is not claimed merely from repository publication; execute `scripts/verify.sh` with Java 21 to establish observed runtime evidence.
+The new Java experiment is executable evidence prepared in the repository. Runtime PASS is not claimed from publication alone; execute `scripts/verify.sh` with Java 21 to establish observed runtime evidence.
