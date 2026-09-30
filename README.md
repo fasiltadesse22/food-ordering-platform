@@ -1,25 +1,28 @@
-# Food Ordering Platform — Course 2 / V7.1
+# Food Ordering Platform — Course 2
 
-This repository is the continuously evolving Food Ordering Platform for the Enterprise Distributed Systems Architecture & System Design course.
+Continuously evolving learning project for **Enterprise Distributed Systems Architecture & System Design**.
 
-## Current learning checkpoint
-**Cluster 1.1 / Part 1.1.4 — Identity and Authoritative State**
+This repository is intentionally evolved from business/domain reasoning toward distributed mechanisms only when architectural pressure and evidence justify them.
 
-This checkpoint inherits Part 1.1.3 and makes identity, state representation, authority, and stale observation executable. It deliberately does not yet define lifecycle legality, invariants, aggregate boundaries, persistence, concurrency control, or distributed consistency.
+## Current checkpoint — C2.1.6
 
-The state authority is an educational single-process mechanism, not a production repository or durability guarantee.
+The project currently covers:
+
+- business actors, goals and ordering intent;
+- workflow discovery and command/decision/fact semantics;
+- identity and authoritative-state reasoning;
+- explicit Order lifecycle and legal/illegal transitions;
+- selected business invariants translated into executable correctness claims;
+- evidence that distinguishes sequentially observed behavior from unproven concurrency, durability and distributed guarantees.
+
+No Kafka, Redis, Saga, Outbox, CQRS, microservice decomposition, or distributed coordination is introduced yet. Those mechanisms must earn their place through later requirements and evidence.
 
 ## Verify
-Run:
+
+Use Java 21:
 
 ```bash
 ./scripts/verify.sh
 ```
 
-The script compiles Java 21 sources and runs the dependency-free executable tests. `pom.xml` remains available for Maven-shaped project evolution when Maven is available.
-
-## Learning evidence
-- `docs/business/workflows/`
-- `docs/evidence/part-1.1.2/`
-- executable scenarios in `OrderingWorkflowCatalog`
-- tests preserving unresolved policy rather than silently guessing it
+The verification script compiles main and test sources and runs the executable learning suites.
