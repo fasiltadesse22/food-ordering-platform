@@ -11,4 +11,5 @@ java -ea -cp "$OUT" com.foodordering.semantics.OrderingSemanticsTest
 java -ea -cp "$OUT" com.foodordering.state.AuthoritativeOrderStateTest
 java -ea -cp "$OUT" com.foodordering.lifecycle.OrderLifecycleTest
 java -ea -cp "$OUT" com.foodordering.correctness.ExecutableCorrectnessModelTest
+java -ea -cp "$OUT" com.foodordering.correctness.InvariantBypassExperimentTest
 echo "PASS compile main + test sources with Java 21"

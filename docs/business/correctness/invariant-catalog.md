@@ -1,36 +1,49 @@
-# C2.1.6 — Executable Correctness Model
+# C2.1.7 — Invariants: The Truths Architecture Must Protect
 
-This catalog turns selected business truths into explicit correctness claims and executable examples. It is deliberately still a single-process learning model: persistence transactions, optimistic locking, aggregates, Kafka, Saga, Outbox, and distributed coordination are deferred.
+Part 1.1.7 treats invariants as business specifications that architecture must preserve. It deliberately separates the truth itself from validation, database constraints, and other enforcement mechanisms.
 
-## Invariants
+## INV-ORDER-01 — Paid commercial agreement is not silently rewritten
+Once payment success makes commercial terms consequential, quantity/price/restaurant/order-line terms cannot be mutated as if payment had never happened. A later change requires an explicit business workflow whose semantics are separately defined.
 
-### INV-ORDER-01 — Paid-order commercial terms are immutable
-Once an order is `PAID`, its commercial terms must not be silently changed. A change requires an explicit later business workflow rather than mutation of the already-paid agreement.
+- Scope: one logical order and the commercial agreement referenced by payment.
+- Violation example: `PAID` order quantity changes from 2 to 5 with no amendment/refund/re-price workflow.
+- Not equivalent to validation: `quantity > 0` can be true while this invariant is false.
+- Enforcement status in C2.1.7: one explicit guard exists, but bypass paths are intentionally demonstrated; global enforcement is not claimed.
 
-This is a business invariant, not merely input validation. A field-level check such as `quantity > 0` cannot protect it because legality depends on lifecycle history.
+## INV-PAYMENT-01 — At most one successful effect per logical payment
+For logical payment identity `p`, `successfulEffects(p) <= 1`.
 
-### INV-PAYMENT-01 — One successful payment effect per logical payment
-For one logical payment identity, at most one successful payment effect may be recorded.
+- Request identity is not logical-payment identity.
+- Multiple attempts may be legitimate; multiple successful business effects for the same logical payment are not.
+- A future database constraint may help enforce this, but a constraint is not the invariant and must match the exact business cardinality.
+- Enforcement status in C2.1.7: sequential in-memory check only; concurrency, crash safety, durability, and external-provider effects remain unproven.
 
-This is stronger than saying that two requests cannot share a request ID. Retries may use different transport/request identities while still representing the same logical payment.
+## INV-ORDER-02 — Mutually exclusive final outcomes cannot both be authoritative
+Where cancellation and restaurant acceptance are semantically exclusive for the same lifecycle point, both cannot become authoritative outcomes for one order.
 
-### INV-ORDER-02 — Restaurant acceptance and cancellation cannot both become final outcomes
-For one order, terminal business outcomes that semantically conflict must not both be established. The current executable model demonstrates the invariant with a single authoritative decision point; durable/concurrent enforcement is intentionally deferred.
+- Sequential lifecycle guards demonstrate one protected path.
+- Concurrent decisions from the same prior state remain a future experiment.
 
-## Validation rule versus invariant versus database constraint
+## INV-REFUND-01 — Refund cannot exceed eligible captured value
+For one payment, cumulative successful refund value must not exceed the amount that is eligible to be refunded under the business policy.
 
-- Validation rule: a proposed quantity must be greater than zero.
-- Business invariant: a paid order cannot be silently modified.
-- Database constraint: a future persistence mechanism might use `UNIQUE(logical_payment_id)` as one enforcement mechanism for INV-PAYMENT-01.
+This is recorded now as a business invariant, not implemented as a payment/refund subsystem. Exact partial-refund policy remains a domain question and must be clarified before implementation.
 
-The database constraint would be an implementation mechanism, not the business truth itself.
+## Specification vs enforcement
 
-## Atomicity implications
+`invariant -> required truth`
 
-A check followed by a state change is safe only if competing operations cannot invalidate the checked condition before the change becomes authoritative. The current in-memory model provides a single method boundary for reasoning, but it does **not** claim database atomicity or thread safety.
+`guard / type / transaction / constraint / lock / conditional write / idempotency record -> possible enforcement mechanisms`
 
-Future parts/clusters must derive transaction and concurrency-control boundaries from these invariants rather than from table relationships.
+A passing test through one guarded API proves that path behaved as expected under the tested conditions. It does not prove that every mutation path, concurrent execution, crash window, restart, or future service boundary preserves the invariant.
 
-## Consistency implications
+## Atomicity requirement register
 
-If state later crosses process or ownership boundaries, each invariant must be classified by how fresh/authoritative the deciding state must be. A stale read may be acceptable for display while being unacceptable for a decision that protects INV-PAYMENT-01 or mutually exclusive terminal outcomes.
+| Invariant | Competing/related operations | State that must be reasoned about together | Current guarantee | Future pressure |
+|---|---|---|---|---|
+| INV-ORDER-01 | pay vs commercial-term modification | lifecycle/payment consequence + commercial terms | guarded sequential example only | derive ownership/transaction boundary |
+| INV-PAYMENT-01 | duplicate/retried successful payment | logical payment identity + successful effect record | sequential check-then-act only | atomic check/effect/recording problem |
+| INV-ORDER-02 | cancel vs accept | authoritative order lifecycle decision | sequential transition protection only | concurrent conflict handling |
+| INV-REFUND-01 | multiple refunds | captured/eligible amount + cumulative successful refunds | specification only | atomic financial accounting boundary |
+
+The register states correctness pressure. It intentionally does not choose aggregates, database transactions, optimistic locking, distributed locks, Kafka, Saga, Outbox, or any other later mechanism.
