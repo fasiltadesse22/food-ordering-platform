@@ -1,15 +1,20 @@
-# C2.1.5 Checkpoint
+# C2.1.6 Checkpoint
 
-Part 1.1.5 makes the Order business lifecycle explicit with an executable transition policy, a transition matrix, terminal-state semantics, and evidence for legal/illegal progression.
+Part 1.1.6 translates selected business truths into executable correctness claims while keeping the distinction between a business invariant and its enforcement mechanism explicit.
+
+## Added
+- invariant catalog with IDs and architectural implications;
+- executable correctness model;
+- tests for paid-order immutability, logical-payment uniqueness, and conflicting outcomes;
+- evidence document distinguishing observed sequential behavior from unproven concurrency/durability guarantees.
 
 ## Deliberately unresolved
+- thread-safe atomic check-and-change;
+- database persistence and ACID transaction boundaries;
+- optimistic/pessimistic concurrency control;
+- durable idempotency/deduplication;
+- aggregate boundaries and repositories;
+- cross-service consistency;
+- Kafka/Saga/Outbox/Redis.
 
-- transition preconditions/postconditions beyond lifecycle-state membership
-- business invariants across multiple state dimensions
-- concurrency and race safety
-- atomic check-and-transition
-- durable persistence and transactions
-- refund/compensation workflow semantics
-- aggregate/repository/service boundaries
-
-These are preserved as future learning pressures rather than prematurely solved.
+These are intentionally deferred so later mechanisms are introduced because the correctness model creates architectural pressure for them.
