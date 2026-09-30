@@ -1,24 +1,28 @@
-# C2.1.7 Checkpoint
+# C2.1.8 Checkpoint
 
-Part 1.1.7 is **Invariants: The Truths Architecture Must Protect**. It deepens the invariant model without choosing later architectural mechanisms prematurely.
+Part 1.1.8 is **Reversible, Irreversible and Compensatable Business Actions**.
 
-## Inherited baseline
-C2.1.6 introduced executable correctness claims for paid-order commercial immutability, logical-payment uniqueness, and mutually exclusive order outcomes.
+## Predecessor
+C2.1.7 at `8f5b696d5840274b4115cee0f3f6e266d7267482`.
 
-## Added / refined
-- invariant catalog now states scope, violations, enforcement status, and atomicity pressure;
-- refund eligibility is recorded as a specification-level financial invariant, with policy details explicitly unresolved;
-- atomicity requirement register maps invariants to competing operations and state that must be reasoned about together;
-- bypass experiment demonstrates specification != enforcement and passing guarded-path tests != universal guarantee.
+## Added
+- explicit reversible / irreversible / compensatable vocabulary;
+- Food Ordering action classification for payment, restaurant acceptance, preparation, cancellation and refund;
+- semantic experiment showing that refund compensation adds history rather than erasing payment success;
+- failure scenario showing that failed compensation leaves the original consequential effect true and creates unresolved work.
+
+## Architectural conclusion
+Rollback is not a universal business concept. Consequential external facts must be preserved; compensation is a new operation with its own eligibility, failure and correctness semantics.
 
 ## Deliberately unresolved
+- concurrency/race resolution;
 - aggregate and repository boundaries;
 - local ACID transaction design;
 - optimistic/pessimistic concurrency control;
 - durable idempotency/deduplication;
-- concurrent cancel/accept and duplicate-payment race resolution;
+- payment-provider integration and durable refund processing;
 - cross-service consistency;
-- Kafka, Saga, Outbox, Inbox, Redis, CQRS, distributed locks.
+- Kafka, Saga, Outbox, Inbox, Redis, CQRS, Event Sourcing and distributed locks.
 
 ## Verification boundary
-The GitHub connector can create and inspect repository objects but does not execute Java. Runtime verification must be recorded only after `./scripts/verify.sh` is actually run in a Java 21 environment. Until then, the new bypass experiment is committed as prepared evidence, not a claimed runtime PASS.
+The GitHub connector does not execute Java. The new experiment is committed as prepared executable evidence. Runtime PASS must not be claimed until `./scripts/verify.sh` is executed in a Java 21 environment.
