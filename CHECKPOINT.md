@@ -1,38 +1,41 @@
-# C2.1.2-P03 Checkpoint
+# C2.1.2-P04 Checkpoint
 
-Part 1.2.3 is **Invariant to Required State to Ownership Pressure**.
+Part 1.2.4 is **Deriving Candidate Aggregates from Invariants**.
 
 ## Scope
-For every inherited invariant, identify required authoritative facts, current representations, mutation capabilities, conflicting mutations, forbidden states, and atomicity/consistency pressure.
-
-P03 does not select the later structural or persistence solution.
+Use inherited invariant, required-fact, mutation-conflict and forbidden-state evidence to derive and compare candidate consistency boundaries. Do not infer Aggregates from nouns, tables, object graphs, bounded contexts, future services or deployments.
 
 ## Inherited baseline
-C2.1.2-P02 remains the immediate baseline. P01 identity semantics, P02 value semantics, and all Cluster 1.1 lifecycle, invariant, and failure-window evidence are preserved.
+C2.1.2-P03 remains the immediate baseline. Identity/value semantics and all Cluster 1.1/P03 correctness evidence remain authoritative.
 
 ## Added
-- executable InvariantStateDependency learning model;
-- dependency catalog for INV-ORDER-01, INV-PAYMENT-01, INV-ORDER-02, and INV-REFUND-01;
-- explicit fact, authority, mutation, conflict, and forbidden-state reasoning;
-- P03 experiment preserving the inherited stale cross-fact failure window;
-- distinction between domain ownership pressure and deployment ownership;
-- distinction between atomicity requirement and a future implementation mechanism.
+- CandidateAggregateDesign architectural learning model;
+- CandidateAggregateCatalog with four competing boundary hypotheses;
+- separate Order/Payment and combined Order+Payment plausible candidates;
+- deliberately undersized fragmented-Order candidate;
+- deliberately oversized whole-ordering-graph candidate;
+- executable comparison preserving the Order/Payment cross-boundary pressure;
+- evidence artifact distinguishing invariant localization from coupling/contention risk.
+
+## Current architectural conclusion
+Known Order lifecycle/commercial correctness creates strong pressure for an Order-local consistency unit. Logical-payment successful-effect and refund accounting create strong pressure for a Payment-local consistency unit. The inherited Order-to-Payment acceptance dependency remains the principal unresolved boundary pressure.
+
+Separate Order/Payment and combined Order+Payment are both examined because each resolves one force while worsening another. P04 does not declare a final production Aggregate merely from this comparison.
 
 ## Verification status
-Prepared but not runtime-observed in this environment. scripts/verify.sh registers InvariantStateOwnershipPressureTest and preserves ConsistencyScopePressureTest. Publication alone is not runtime PASS evidence.
-
-## Architectural conclusion
-P01 and P02 tell us what has identity and what is defined by value. P03 tells us which facts each invariant needs and which mutations can invalidate a decision. That creates evidence for comparing candidate consistency boundaries in P04, but does not choose one.
+Prepared but not runtime-observed in this environment. scripts/verify.sh registers CandidateAggregateDerivationTest. Repository publication is not runtime PASS evidence.
 
 ## Deliberately unresolved
-- candidate and final consistency boundaries;
-- mutation entry-point authority;
-- repository, persistence, and schema design;
-- local ACID transaction boundaries;
-- optimistic or pessimistic concurrency;
-- cross-boundary consistency mechanisms;
-- service decomposition;
-- distributed transaction, Saga, Kafka, Outbox, Redis, or locking mechanisms.
+- final Aggregate and Aggregate Root selection;
+- external mutation entry points and encapsulation;
+- internal versus cross-Aggregate references;
+- exact consistency guarantees;
+- persistence/repository/schema;
+- local transaction implementation;
+- optimistic/pessimistic concurrency;
+- cross-boundary coordination;
+- service decomposition and deployment;
+- Saga, Kafka, Outbox, Redis or distributed locks.
 
 ## Next part
-P04 derives and compares candidate Aggregate designs from these invariant, fact, and mutation graphs. It must compare alternatives rather than assume one Aggregate per future service.
+P05 derives Aggregate Root and mutation authority from the candidate boundaries and inherited invariant-bypass evidence. It must show why outside mutation should pass through a controlling root rather than merely adding a class named AggregateRoot.
