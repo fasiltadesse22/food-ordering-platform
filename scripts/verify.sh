@@ -7,6 +7,7 @@ mkdir -p "$OUT"
 find "$ROOT/src/main/java" "$ROOT/src/test/java" -name '*.java' -print0 | xargs -0 javac --release 21 -d "$OUT"
 java -ea -cp "$OUT" com.foodordering.domain.OrderIntentTest
 java -ea -cp "$OUT" com.foodordering.domain.EntityIdentitySemanticsTest
+java -ea -cp "$OUT" com.foodordering.domain.ValueSemanticsTest
 java -ea -cp "$OUT" com.foodordering.workflow.OrderingWorkflowCatalogTest
 java -ea -cp "$OUT" com.foodordering.semantics.OrderingSemanticsTest
 java -ea -cp "$OUT" com.foodordering.state.AuthoritativeOrderStateTest
