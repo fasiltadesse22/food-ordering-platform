@@ -1,28 +1,44 @@
 # C2.1.13 Checkpoint
 
-Part 1.1.13 is **Consistency Implications and the Cost of Coordination**.
+Part 1.1.13 is **Correctness Evidence, Diagnosis and Staff-Level Design Defense**.
 
-## Predecessor
-C2.1.12 at `966853b077df888b5b92e71ea5f08ebf3bf5b26b`.
+## Scope authority
+This checkpoint follows the derived Cluster 1.1 blueprint for the V7.1 roadmap. It is the closing Type C evidence/synthesis part for Cluster 1.1.
+
+## Inherited baseline
+The cumulative repository already contains the workflow, semantic, authoritative-state, lifecycle, invariant, duplicate-intent, conflicting-operation, stale-decision, and consistency-scope artifacts produced by the preceding parts.
+
+An earlier numbering drift temporarily labeled a supplemental coordination-cost experiment as C2.1.13. That experiment is preserved as exploratory material, but it is **not** the authoritative Part 1.1.13 scope and it does not select a production coordination mechanism.
 
 ## Added
-- derivation from invariant scope to required agreement and coordination scope;
-- explicit distinction between correctness requirements and coordination mechanisms;
-- semantic comparison of uncoordinated conflicting work, minimal conflict coordination, and intentionally over-broad coordination;
-- evidence that coordination should be scoped to correctness-relevant conflicts rather than unrelated work;
-- quality-attribute reasoning around concurrency, waiting, contention, availability coupling, failure surface, and operational complexity.
+- persistent Cluster 1.1 correctness evidence portfolio;
+- production-style correctness diagnosis playbook;
+- Staff-level architecture/design-defense artifact with adversarial follow-ups;
+- explicit Cluster 1.1 -> Cluster 1.2 handoff;
+- evidence classification separating specified, prepared, observed, inferred, and not-proven claims.
+
+## Required evidence portfolio
+The checkpoint explicitly covers:
+- lifecycle and illegal transitions;
+- duplicate logical payment intent/effect;
+- cancellation/acceptance stale-decision race;
+- conflicting mutually exclusive outcomes;
+- paid-order modification/invariant bypass;
+- cross-fact payment/order staleness, including payment change before delayed acceptance;
+- refund correctness as a specified but not yet executable invariant.
 
 ## Architectural conclusion
-Coordination is a cost paid to preserve a required correctness property. The design objective is not "avoid coordination" and not "coordinate everything". It is to identify the smallest correctness-relevant scope, determine the guarantee actually required by the business invariant, and later select the least costly mechanism that provides that guarantee under the real workload and failure model.
+Cluster 1.1 establishes **what must remain correct regardless of eventual architecture**. It does not yet choose the structural or infrastructure mechanisms that enforce those truths. Cluster 1.2 must consume this evidence to derive entity/value-object/aggregate ownership and local consistency boundaries.
 
 ## Deliberately unresolved
-- aggregate and repository boundaries;
-- concrete local ACID transaction design and isolation level;
+- aggregate/repository boundaries;
+- persistence and database schema;
+- local ACID transaction design and isolation level;
 - optimistic/pessimistic concurrency control;
-- distributed transaction protocols;
-- Saga/compensation design;
 - service decomposition;
-- Kafka, Outbox, Redis, distributed locks, or eventual-consistency mechanisms.
+- distributed transaction/Saga design;
+- Kafka, Outbox, Inbox, Redis, distributed locks;
+- durable idempotency and restart recovery.
 
 ## Verification boundary
-The C2.1.13 Java experiment is registered in `scripts/verify.sh`. Runtime PASS is established only by executing the suite with Java 21; repository publication alone is prepared evidence, not observed runtime evidence.
+Existing executable experiments remain registered in `scripts/verify.sh`. This part primarily adds persistent evidence and design-defense artifacts; repository publication is not equivalent to observed Java runtime PASS.
