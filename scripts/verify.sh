@@ -20,5 +20,6 @@ java -ea -cp "$OUT" com.foodordering.correctness.ConflictingConcurrentOperations
 java -ea -cp "$OUT" com.foodordering.correctness.StaleDecisionExperimentTest
 java -ea -cp "$OUT" com.foodordering.correctness.ConsistencyScopePressureTest
 java -ea -cp "$OUT" com.foodordering.correctness.InvariantStateOwnershipPressureTest
+java -ea -cp "$OUT" com.foodordering.correctness.CandidateAggregateDerivationTest
 java -ea -cp "$OUT" com.foodordering.correctness.CoordinationCostPressureTest
 echo "PASS compile main + test sources with Java 21"
